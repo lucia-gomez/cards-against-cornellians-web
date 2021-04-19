@@ -1,23 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import 'materialize-css';
+
+import { useState } from 'react';
+import { io } from 'socket.io-client';
+import { Router } from '@reach/router';
+import Home from './components/Home';
+import Room from './components/Room';
+
+const socket = io();
 
 function App() {
+  const [room, setRoom] = useState(sessionStorage.getItem('cac-room-name'));
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Home path="/" socket={socket} setRoom={setRoom} />
+        <Room path="/play" socket={socket} room={room} />
+      </Router>
     </div>
   );
 }
