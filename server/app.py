@@ -118,6 +118,23 @@ def start_game(room_name):
         return
 
     emit('start game', to=room_name, skip_sid=request.sid)
+    play_round(room_name)
+
+
+def play_round(room_name):
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
+
+    (judge, players), black_card = game.new_round()
+    for player in game.players:
+        data = {
+            'whiteCards': player.get_hand_str(),
+            'blackCard': str(black_card),
+            'isJudge': player in players,
+            'judgeName': judge.name,
+        }
+        emit('new round', data, to=player.id)
 
 
 if __name__ == '__main__':

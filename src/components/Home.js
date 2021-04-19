@@ -14,7 +14,6 @@ const Home = props => {
   const socket = props.socket;
 
   const [rooms, setRooms] = useState([]);
-  const [roomName, setRoomName] = useState();
 
   useEffect(() => {
     socket.on('connect', function () {
@@ -35,10 +34,8 @@ const Home = props => {
   return (
     <div>
       <p>Cards Against Cornellians</p>
-      {/* <input id='room-name' onChange={e => setRoomName(e.target.value)} placeholder="Room name"></input> */}
       <Room to="/play"
         onClick={() => {
-          // props.setRoom(roomName);
           handleCreateRoom();
         }}>Create Room</Room>
       <ul>

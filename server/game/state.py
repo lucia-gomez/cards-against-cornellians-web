@@ -105,6 +105,9 @@ class Player:
         self.score += 1
         return self.score
 
+    def get_hand_str(self):
+        return [str(card) for card in self.hand]
+
     def __str__(self):
         return self.name + ': ' + str(self.score)
 

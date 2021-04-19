@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import Username from './Username';
 import { Button } from 'react-materialize';
+import Gameplay from './Gameplay';
 
 const Room = props => {
   const socket = props.socket;
@@ -9,6 +10,7 @@ const Room = props => {
   const [name, setName] = useState();
   const [isHost, setHost] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
+  const [roundData, setRoundData] = useState();
 
   useEffect(() => {
     socket.on('disconnect', () => {
@@ -30,11 +32,17 @@ const Room = props => {
 
     socket.on('start game', () => setGameInProgress(true));
 
+    socket.on('new round', data => {
+      setRoundData(data);
+    });
+
     return function () {
       socket.off('user joined');
       socket.off('user left');
       socket.off('start game');
       socket.off('room closed');
+      socket.off('disconnect');
+      socket.off('new round');
     }
   }, [])
 
@@ -63,7 +71,7 @@ const Room = props => {
     <>
       <Username socket={socket} room={props.room} submit={submitUsername} />
       <p>Room: {props.room}</p>
-      {gameInProgress ? null :
+      {gameInProgress ? <Gameplay roundData={roundData} /> :
         <>
           <ul>
             {players.map((p, i) =>
