@@ -16,6 +16,18 @@ socketio = SocketIO(app)
 rooms = {}
 
 
+def get_game(room_name, sid):
+    if room_name in rooms:
+        return rooms[room_name]
+    emit("room closed", to=sid)
+    return None
+
+
+'''
+    CONNECTING AND DISCONNECTING
+'''
+
+
 @socketio.on('connection')
 def connection():
     return list(rooms.keys())
@@ -23,9 +35,16 @@ def connection():
 
 @socketio.on('disconnection')
 def disconnection(room_name, user_name):
-    game = rooms[room_name]
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
     leave_room(str(room_name))
     emit('user left', user_name, to=room_name)
+
+
+'''
+    ROOMS
+'''
 
 
 @socketio.on('create room')
@@ -48,7 +67,9 @@ def handle_create_room():
 def handle_join_room(room_name, user_name, token):
     print(user_name, "joined room")
     join_room(str(room_name))
-    game = rooms[room_name]
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
 
     new_token = token
     # token_match = filter(game.players, lambda p: p.session_token == token)
@@ -73,7 +94,10 @@ def handle_join_room(room_name, user_name, token):
 
 @socketio.on('validate username')
 def validate_username(room_name, user_name):
-    game = rooms[room_name]
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
+
     names = [p.name for p in game.players]
     if user_name in names:
         return {'valid': False, 'error': "Username taken"}
@@ -82,8 +106,17 @@ def validate_username(room_name, user_name):
     return {'valid': True}
 
 
+'''
+    GAMEPLAY
+'''
+
+
 @socketio.on('start game')
 def start_game(room_name):
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
+
     emit('start game', to=room_name, skip_sid=request.sid)
 
 

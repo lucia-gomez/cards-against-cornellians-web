@@ -26,12 +26,15 @@ const Room = props => {
       console.log(leftPlayer, 'has left the room');
     });
 
+    socket.on('room closed', () => navigate('/'));
+
     socket.on('start game', () => setGameInProgress(true));
 
     return function () {
       socket.off('user joined');
       socket.off('user left');
       socket.off('start game');
+      socket.off('room closed');
     }
   }, [])
 
