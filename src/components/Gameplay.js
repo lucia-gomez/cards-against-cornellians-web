@@ -9,8 +9,8 @@ const Gameplay = props => {
 
   return (
     <>
-      <BlackCard>{d.blackCard}</BlackCard>
-      {Hand(d.whiteCards)}
+      <BlackCard>{d.blackCard.text}</BlackCard>
+      {Hand(d.whiteCards, d.blackCard.numBlanks)}
     </>
   );
 }

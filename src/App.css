@@ -7,14 +7,3 @@ body {
   display: flex;
   justify-content: center;
 }
-
-/* @media only screen and (min-width: 601px) and (max-width: 992px) {
-  #toast-container {
-    right: 5%;
-    left: unset;
-    top: 7%;
-    max-width: 90%;
-  }
-} */
-
-

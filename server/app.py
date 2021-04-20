@@ -73,8 +73,8 @@ def handle_join_room(room_name, user_name, token):
 
     new_token = token
     # token_match = filter(game.players, lambda p: p.session_token == token)
-    token_match = [p for p in game.players if p.session_token == token]
-    if len(token_match) > 0 and token_match[0].session_token == token:
+    token_match = [p for p in game.players if p.sessionToken == token]
+    if len(token_match) > 0 and token_match[0].sessionToken == token:
         # user already exists, update their info
         player = token_match[0]
         player.name = user_name
@@ -89,7 +89,7 @@ def handle_join_room(room_name, user_name, token):
          to=room_name, skip_sid=request.sid)
 
     player = game.get_player_by_id(request.sid)
-    return {'players': players, 'isHost': player.is_host, 'token': new_token}
+    return {'players': players, 'isHost': player.isHost, 'token': new_token}
 
 
 @socketio.on('validate username')
@@ -129,8 +129,10 @@ def play_round(room_name):
     (judge, players), black_card = game.new_round()
     for player in game.players:
         data = {
-            'whiteCards': player.get_hand_str(),
-            'blackCard': str(black_card),
+            'whiteCards': player.hand_to_json(),
+            'blackCard': black_card.to_json(),
+            # 'blackCard': str(black_card),
+            # 'blackCardNumBlanks': black_card.numBlanks,
             'isJudge': player in players,
             'judgeName': judge.name,
         }

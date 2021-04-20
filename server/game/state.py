@@ -62,6 +62,9 @@ class BlackCard(Card):
         Card.__init__(self, text)
         self.numBlanks: int = num_blanks
 
+    def to_json(self):
+        return {'text': self.text, 'numBlanks': self.numBlanks}
+
 
 class Player:
     """ Representation of a player, and the player's data.
@@ -76,8 +79,8 @@ class Player:
     def __init__(self, name: str, client_id: str, session_token: str, is_host=False):
         self.name: str = name
         self.id: str = client_id
-        self.session_token: str = session_token
-        self.is_host: bool = is_host
+        self.sessionToken: str = session_token
+        self.isHost: bool = is_host
         self.hand: List[WhiteCard] = []
         self.score: int = 0
 
@@ -105,7 +108,7 @@ class Player:
         self.score += 1
         return self.score
 
-    def get_hand_str(self):
+    def hand_to_json(self):
         return [str(card) for card in self.hand]
 
     def __str__(self):
