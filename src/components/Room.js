@@ -62,16 +62,11 @@ const Room = props => {
     socket.emit('start game', props.room);
   }
 
-  if (!props.room) {
-    navigate('/');
-    return "Go back to the home page";
-  }
-
   return (
     <>
       <Username socket={socket} room={props.room} submit={submitUsername} />
       <p>Room: {props.room}</p>
-      {gameInProgress ? <Gameplay roundData={roundData} /> :
+      {gameInProgress ? <Gameplay {...{ roundData, results }} {...props} /> :
         <>
           <ul>
             {players.map((p, i) =>

@@ -139,5 +139,27 @@ def play_round(room_name):
         emit('new round', data, to=player.id)
 
 
+@socketio.on('submit cards')
+def submit_cards(room_name, cards, wildcardTexts):
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
+
+    player = game.get_player_by_id(request.sid)
+
+    for card in cards:
+        try:
+            game.submit(player, card+1)
+        except Wildcard as e:
+            # text = socket.emit('wildcard', to=request.sid)
+            game.submit_wildcard(player, wildcardTexts[str(card)], card+1)
+
+    if game.is_submissions_done():
+        emit("everyone played", game.get_submissions(), to=room_name)
+
+    game.draw_cards(player)
+    return player.hand_to_json()
+
+
 if __name__ == '__main__':
     socketio.run(app)

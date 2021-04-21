@@ -109,7 +109,7 @@ class Player:
         return self.score
 
     def hand_to_json(self):
-        return [str(card) for card in self.hand]
+        return [{'text': str(card), 'isWild': card.isWild} for card in self.hand]
 
     def __str__(self):
         return self.name + ': ' + str(self.score)
@@ -261,27 +261,6 @@ class State:
         for _ in range(GameRules.CARDS_PER_HAND - len(player.hand)):
             player.hand.append(self._draw_white_card())
 
-    # def _pretty_print_submission(self, cards: List[WhiteCard]):
-    #     c = str(cards[0])
-    #     if len(cards) == 1:
-    #         return c
-    #     for card in cards[1:]:
-    #         c += ', ' + str(card)
-    #     return c
-    #
-    # def _pretty_print_all_submissions(self):
-    #     s = ''
-    #     for i, player in enumerate(self.submissions):
-    #         c = self._pretty_print_submission(self.submissions[player])
-    #         s += str(i+1) + ': ' + c + '\n'
-    #     return s
-    #
-    # def print_submissions(self):
-    #     keys = list(self.submissions.keys())
-    #     shuffle(keys)
-    #     self.submissions = {k: self.submissions[k] for k in keys}
-    #     return self._pretty_print_all_submissions()
-
     def get_submissions(self) -> List[List[WhiteCard]]:
         """ Get the submissions for a round, in random order.
             Some black cards require more than one submitted white card,
@@ -292,7 +271,14 @@ class State:
         keys = list(self.submissions.keys())
         shuffle(keys)
         self.submissions = {k: self.submissions[k] for k in keys}
-        return list(self.submissions.values())
+        return [[str(card) for card in sub] for sub in self.submissions.values()]
+        # return list(self.submissions.values())
+
+    def is_submissions_done(self) -> bool:
+        """
+        Check if all players have submitted cards
+        """
+        return len(self.submissions) == len(self.players)-1
 
     def select_winner(self, index) -> Tuple[Player, str]:
         """ Process the judge's selection for a round: award the winner a point,
