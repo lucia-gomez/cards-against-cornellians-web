@@ -3,12 +3,21 @@ import { useState, useEffect } from 'react';
 import { Button } from 'react-materialize';
 import { BlackCard } from '../styles/Cards';
 import Hand from "./Hand";
+import Results from './Results';
+
+const ResultsSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  padding: 20px;
+`;
 
 const Gameplay = props => {
   const [cards, setCards] = useState([]);
   const [selected, setSelected] = useState([]);
   const [wildcards, setWildcards] = useState({});
   const [hasPlayed, setHasPlayed] = useState(false);
+  const [judgeSelected, setJudgeSelected] = useState(null);
 
   useEffect(() => {
     setCards(props.roundData ? props.roundData.whiteCards : []);
@@ -30,10 +39,23 @@ const Gameplay = props => {
     });
   }
 
+  const chooseWinner = () => {
+    socket.emit('choose winner', props.room, judgeSelected);
+  }
+
   return (
     <>
-      <BlackCard>{d.blackCard.text}</BlackCard>
-      {Hand(d.whiteCards, d.blackCard.numBlanks)}
+      <ResultsSection>
+        <BlackCard>{d.blackCard.text}</BlackCard>
+        {props.results !== null ?
+          <Results
+            results={props.results}
+            isJudge={d.isJudge}
+            {...{ judgeSelected, setJudgeSelected }}
+          />
+          : null}
+      </ResultsSection>
+      {d.isJudge ? <Button onClick={chooseWinner}>Select Winner</Button> : null}
       {d.isJudge || hasPlayed ? null : <Button onClick={submitCards}>Submit Cards</Button>}
       <Hand
         cards={cards}

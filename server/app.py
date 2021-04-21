@@ -161,5 +161,15 @@ def submit_cards(room_name, cards, wildcardTexts):
     return player.hand_to_json()
 
 
+@socketio.on('choose winner')
+def choose_winner(room_name, index):
+    game = get_game(room_name, request.sid)
+    if not game:
+        return
+
+    winner, _ = game.select_winner(index+1)
+    emit("round results", winner.name, to=room_name)
+
+
 if __name__ == '__main__':
     socketio.run(app)

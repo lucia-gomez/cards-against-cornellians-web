@@ -11,6 +11,7 @@ const Room = props => {
   const [isHost, setHost] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
   const [roundData, setRoundData] = useState();
+  const [results, setResults] = useState(null);
 
   useEffect(() => {
     socket.on('disconnect', () => {
@@ -33,7 +34,16 @@ const Room = props => {
     socket.on('start game', () => setGameInProgress(true));
 
     socket.on('new round', data => {
+      setResults(null);
       setRoundData(data);
+    });
+
+    socket.on('everyone played', results => {
+      setResults(results);
+    });
+
+    socket.on('round results', winner => {
+      console.log(winner);
     });
 
     return function () {
@@ -43,6 +53,8 @@ const Room = props => {
       socket.off('room closed');
       socket.off('disconnect');
       socket.off('new round');
+      socket.off('everyone played');
+      socket.off('round results');
     }
   }, [])
 
@@ -55,7 +67,10 @@ const Room = props => {
       setHost(data.isHost);
       sessionStorage.setItem('cac-room-token', data.token);
     });
+    // TODO: check if game is already in progress
   }
+
+  console.log(name);
 
   const startGame = () => {
     setGameInProgress(true);
