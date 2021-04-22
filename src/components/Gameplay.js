@@ -21,7 +21,13 @@ const Gameplay = props => {
 
   useEffect(() => {
     setCards(props.roundData ? props.roundData.whiteCards : []);
+    setHasPlayed(false);
+    setJudgeSelected(null);
   }, [props.roundData]);
+
+  useEffect(() => {
+    setJudgeSelected(props.roundResults ? props.roundResults.winningIndex : null);
+  }, [props.roundResults]);
 
   const socket = props.socket;
   const d = props.roundData;
@@ -40,22 +46,29 @@ const Gameplay = props => {
   }
 
   const chooseWinner = () => {
-    socket.emit('choose winner', props.room, judgeSelected);
+    socket.emit('choose winner', props.room, judgeSelected, () => {
+      setTimeout(() => {
+        socket.emit('play round', props.room);
+      }, 5000);
+    });
   }
 
   return (
     <>
       <ResultsSection>
         <BlackCard>{d.blackCard.text}</BlackCard>
-        {props.results !== null ?
+        {props.submissions === null ? <h2>{d.isJudge ? "You are" : d.judgeName + " is"} the judge</h2> : null}
+        {props.submissions !== null ?
           <Results
-            results={props.results}
+            submissions={props.submissions}
             isJudge={d.isJudge}
             {...{ judgeSelected, setJudgeSelected }}
           />
           : null}
       </ResultsSection>
-      {d.isJudge ? <Button onClick={chooseWinner}>Select Winner</Button> : null}
+      {d.isJudge && props.submissions !== null && props.roundResults === null ?
+        <Button onClick={chooseWinner}>Select Winner</Button> :
+        null}
       {d.isJudge || hasPlayed ? null : <Button onClick={submitCards}>Submit Cards</Button>}
       <Hand
         cards={cards}

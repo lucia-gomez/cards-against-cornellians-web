@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import Username from './Username';
 import { Button } from 'react-materialize';
+import Toast from './Toast';
 import Gameplay from './Gameplay';
 
 const Room = props => {
@@ -11,7 +12,8 @@ const Room = props => {
   const [isHost, setHost] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
   const [roundData, setRoundData] = useState();
-  const [results, setResults] = useState(null);
+  const [submissions, setSubmissions] = useState(null);
+  const [roundResults, setRoundResults] = useState();
 
   useEffect(() => {
     socket.on('disconnect', () => {
@@ -22,7 +24,7 @@ const Room = props => {
 
     socket.on('user joined', (newPlayer, curPlayers) => {
       setPlayers(curPlayers);
-      window.M.toast({ html: newPlayer + " joined the room", displayLength: 3000, classes: 'toast' });
+      Toast(newPlayer + " joined the room", 3000);
     });
 
     socket.on('user left', (leftPlayer) => {
@@ -34,16 +36,18 @@ const Room = props => {
     socket.on('start game', () => setGameInProgress(true));
 
     socket.on('new round', data => {
-      setResults(null);
       setRoundData(data);
+      setSubmissions(null);
+      setRoundResults(null);
     });
 
     socket.on('everyone played', results => {
-      setResults(results);
+      setSubmissions(results);
     });
 
-    socket.on('round results', winner => {
-      console.log(winner);
+    socket.on('round results', data => {
+      setRoundResults(data);
+      Toast(data.winnerName + " won the round", 5000);
     });
 
     return function () {
@@ -70,8 +74,6 @@ const Room = props => {
     // TODO: check if game is already in progress
   }
 
-  console.log(name);
-
   const startGame = () => {
     setGameInProgress(true);
     socket.emit('start game', props.room);
@@ -81,7 +83,7 @@ const Room = props => {
     <>
       <Username socket={socket} room={props.room} submit={submitUsername} />
       <p>Room: {props.room}</p>
-      {gameInProgress ? <Gameplay {...{ roundData, results }} {...props} /> :
+      {gameInProgress ? <Gameplay {...{ roundData, submissions, roundResults }} {...props} /> :
         <>
           <ul>
             {players.map((p, i) =>

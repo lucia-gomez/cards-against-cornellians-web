@@ -121,6 +121,7 @@ def start_game(room_name):
     play_round(room_name)
 
 
+@socketio.on('play round')
 def play_round(room_name):
     game = get_game(room_name, request.sid)
     if not game:
@@ -131,9 +132,7 @@ def play_round(room_name):
         data = {
             'whiteCards': player.hand_to_json(),
             'blackCard': black_card.to_json(),
-            # 'blackCard': str(black_card),
-            # 'blackCardNumBlanks': black_card.numBlanks,
-            'isJudge': player in players,
+            'isJudge': not player in players,
             'judgeName': judge.name,
         }
         emit('new round', data, to=player.id)
@@ -168,7 +167,13 @@ def choose_winner(room_name, index):
         return
 
     winner, _ = game.select_winner(index+1)
-    emit("round results", winner.name, to=room_name)
+    data = {
+        'winnerName': winner.name,
+        'winningIndex': index,
+    }
+    print("sending results")
+    emit("round results", data, to=room_name)
+    return
 
 
 if __name__ == '__main__':

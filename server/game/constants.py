@@ -16,6 +16,6 @@ class GameRules:
     # number of points needed to win
     POINTS_TO_WIN = 10
     # number of wildcards to insert into deck
-    NUM_WILDCARDS = 10
+    NUM_WILDCARDS = 20
     # text for wildcards
     WILDCARD_TEXT = '___'
