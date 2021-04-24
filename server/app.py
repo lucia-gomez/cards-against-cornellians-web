@@ -22,6 +22,11 @@ def index():
     return app.send_static_file('index.html')
 
 
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
+
+
 def get_game(room_name, sid):
     if room_name in rooms:
         return rooms[room_name]
@@ -214,6 +219,6 @@ def choose_winner(room_name, index):
 if __name__ == '__main__':
     socketio.run(
         app,
-        port=int(os.getenv('PORT', 5000)),
+        port=int(os.environ.get('PORT', '5000')),
         host=os.getenv('IP', '0.0.0.0'),
     )
