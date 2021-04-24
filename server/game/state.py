@@ -124,6 +124,7 @@ class Player:
 class State:
     def __init__(self, white_cards, black_cards):
         self.players: List[Player] = []
+        self.playersQueue: List[Player] = []
         self.whiteCards: List[WhiteCard] = white_cards
         self.blackCards: List[BlackCard] = black_cards
         self.whiteDiscards = []
@@ -173,18 +174,28 @@ class State:
         self.blackDiscards.append(card)
         return card
 
-    def add_player(self, name: str, client_id: int, session_token: int):
+    def add_player(self, name: str, client_id: int, session_token: int) -> bool:
         """ Add a new player to the existing game,
-            and draw their hand of white cards
+            and draw their hand of white cards.
+            If a round is in progress, they'll be added to a queue to be
+            added at the start of the next round.
 
         :param name: (str) The player's nickname
         :param client_id: (int) The player's server ID
+        :param session_token: (int) The player's client session token
+        :return: (bool) True if the player was added, False if they're in the queue 
         """
         player = Player(name, client_id, session_token, len(self.players) == 0)
         [player.hand.append(self._draw_white_card())
          for _ in range(self.cardsPerHand)]
+
         with self.lock:
-            self.players.append(player)
+            if self.round > 0:
+                self.playersQueue.append(player)
+                return False
+            else:
+                self.players.append(player)
+                return True
 
     def pretty_player_names(self):
         """ Pretty-print a list of current players
@@ -218,6 +229,9 @@ class State:
         split_players = self._split_players()
         self.round += 1
         return split_players, self._draw_black_card()
+
+    def in_progress(self) -> bool:
+        return self.round > 0
 
     def submit(self, player: Player, index: int, is_wild=False) -> bool:
         """ Process a player's attempt to submit a white card for judgement.
@@ -282,7 +296,8 @@ class State:
 
     def select_winner(self, index) -> Tuple[Player, str]:
         """ Process the judge's selection for a round: award the winner a point,
-        and return the winner's name and the winning submission
+        and return the winner's name and the winning submission.
+        Remove any players from the queue and add them to the game
 
         :param index: The number of the player selected, 1-based index
         :return: (winner's name, winning cards)
@@ -294,6 +309,14 @@ class State:
         #     self.whiteDiscards.extend(self.submissions[player])
         self.submissions = defaultdict(list)
         winner.inc_score()
+
+        if len(self.playersQueue) > 0:
+            for player in self.playersQueue:
+                self.players.append(player)
+            self.playersQueue = []
+
+        if self.is_game_over():
+            self.round = 0
         return winner, cards
 
     def is_game_over(self) -> bool:
@@ -317,6 +340,7 @@ class State:
         """
             Reset the game
         """
+        self.round = 0
         for player in self.players:
             player.score = 0
 
@@ -327,6 +351,9 @@ class State:
         :return: player with the id
         """
         for player in self.players:
+            if player.id == player_id:
+                return player
+        for player in self.playersQueue:
             if player.id == player_id:
                 return player
         return None

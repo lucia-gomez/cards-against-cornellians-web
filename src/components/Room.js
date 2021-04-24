@@ -11,13 +11,13 @@ const Room = props => {
   const [name, setName] = useState();
   const [isHost, setHost] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(false);
+  const [inQueue, setInQueue] = useState(false);
   const [roundData, setRoundData] = useState();
   const [submissions, setSubmissions] = useState(null);
   const [roundResults, setRoundResults] = useState();
 
   useEffect(() => {
     socket.on('disconnect', () => {
-      console.log('disconnecting');
       setHost(false);
       socket.emit('disconnection', props.room, name);
     });
@@ -28,7 +28,6 @@ const Room = props => {
     });
 
     socket.on('user left', (leftPlayer) => {
-      console.log(leftPlayer, 'has left the room');
     });
 
     socket.on('room closed', () => navigate('/'));
@@ -36,6 +35,7 @@ const Room = props => {
     socket.on('start game', () => setGameInProgress(true));
 
     socket.on('new round', data => {
+      setInQueue(false);
       setRoundData(data);
       setSubmissions(null);
       setRoundResults(null);
@@ -48,6 +48,7 @@ const Room = props => {
     socket.on('round results', data => {
       setRoundResults(data);
       Toast(data.winnerName + " won the round", 5000);
+      setInQueue(false);
     });
 
     return function () {
@@ -69,9 +70,10 @@ const Room = props => {
     socket.emit('join room', props.room, n, sessionStorage.getItem('cac-room-token'), data => {
       setPlayers(data.players);
       setHost(data.isHost);
+      setGameInProgress(data.inProgress);
+      setInQueue(data.inQueue);
       sessionStorage.setItem('cac-room-token', data.token);
     });
-    // TODO: check if game is already in progress
   }
 
   const startGame = () => {
@@ -79,21 +81,26 @@ const Room = props => {
     socket.emit('start game', props.room);
   }
 
+  const gameplay = <Gameplay {...{ roundData, submissions, roundResults }} {...props} />;
+
+  const lobby = (
+    <>
+      <ul>
+        {players.map((p, i) =>
+          <li key={i}>{p}</li>
+        )}
+      </ul>
+      {isHost ? <Button onClick={startGame}>Start game</Button>
+        : "Waiting for the host to start the game..."}
+    </>
+  );
+
   return (
     <>
       <Username socket={socket} room={props.room} submit={submitUsername} />
       <p>Room: {props.room}</p>
-      {gameInProgress ? <Gameplay {...{ roundData, submissions, roundResults }} {...props} /> :
-        <>
-          <ul>
-            {players.map((p, i) =>
-              <li key={i}>{p}</li>
-            )}
-          </ul>
-          {isHost ? <Button onClick={startGame}>Start game</Button>
-            : "Waiting for the host to start the game..."}
-        </>
-      }
+      {inQueue ? 'You will be added to the game at the start of the next round' : null}
+      {gameInProgress ? gameplay : lobby}
     </>
   )
 }

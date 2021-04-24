@@ -65,12 +65,12 @@ def handle_create_room():
 
 @socketio.on('join room')
 def handle_join_room(room_name, user_name, token):
-    print(user_name, "joined room")
     join_room(str(room_name))
     game = get_game(room_name, request.sid)
     if not game:
         return
 
+    inQueue = False
     new_token = token
     # token_match = filter(game.players, lambda p: p.session_token == token)
     token_match = [p for p in game.players if p.sessionToken == token]
@@ -82,14 +82,22 @@ def handle_join_room(room_name, user_name, token):
     else:
         new_token = ''.join(random.choices(
             string.ascii_uppercase + string.digits, k=32))
-        game.add_player(user_name, request.sid, new_token)
+        added = game.add_player(user_name, request.sid, new_token)
+        inQueue = not added
 
     players = [str(p) for p in game.players]
     emit('user joined', (user_name, players),
          to=room_name, skip_sid=request.sid)
 
     player = game.get_player_by_id(request.sid)
-    return {'players': players, 'isHost': player.isHost, 'token': new_token}
+    data = {
+        'players': players,
+        'isHost': player.isHost,
+        'token': new_token,
+        'inProgress': game.in_progress(),
+        'inQueue': inQueue,
+    }
+    return data
 
 
 @socketio.on('validate username')
@@ -116,6 +124,7 @@ def start_game(room_name):
     game = get_game(room_name, request.sid)
     if not game:
         return
+    game.reset()
 
     emit('start game', to=room_name, skip_sid=request.sid)
     play_round(room_name)
@@ -134,6 +143,7 @@ def play_round(room_name):
             'blackCard': black_card.to_json(),
             'isJudge': not player in players,
             'judgeName': judge.name,
+            'scoreboard': [str(p) for p in game.players]
         }
         emit('new round', data, to=player.id)
 
@@ -174,6 +184,7 @@ def choose_winner(room_name, index):
     print("sending results")
     emit("round results", data, to=room_name)
     return
+    return game.is_game_over()
 
 
 if __name__ == '__main__':
