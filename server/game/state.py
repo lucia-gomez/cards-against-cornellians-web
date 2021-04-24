@@ -317,6 +317,8 @@ class State:
 
         if self.is_game_over():
             self.round = 0
+            raise GameOver(winner)
+
         return winner, cards
 
     def is_game_over(self) -> bool:

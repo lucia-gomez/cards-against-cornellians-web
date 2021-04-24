@@ -176,14 +176,31 @@ def choose_winner(room_name, index):
     if not game:
         return
 
-    winner, _ = game.select_winner(index+1)
-    data = {
-        'winnerName': winner.name,
-        'winningIndex': index,
-    }
-    print("sending results")
-    emit("round results", data, to=room_name)
-    return
+    try:
+        winner, _ = game.select_winner(index+1)
+        data = {
+            'winnerName': winner.name,
+            'winningIndex': index,
+            'gameOver': False,
+        }
+        emit("round results", data, to=room_name, skip_sid=winner.id)
+        data['winnerName'] = "You"
+        emit("round results", data, to=winner.id)
+    except GameOver as e:
+        winner = e.player
+        data = {
+            'winnerName': winner.name,
+            'winningIndex': index,
+            'gameOver': True,
+        }
+        emit("round results", data, to=room_name, skip_sid=winner.id)
+
+        data['winnerName'] = "You"
+        emit("round results", data, to=winner.id)
+
+        # send to update player/score list
+        data = [str(p) for p in game.players]
+        emit('player list', data, to=room_name)
     return game.is_game_over()
 
 

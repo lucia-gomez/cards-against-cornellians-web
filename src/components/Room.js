@@ -27,6 +27,10 @@ const Room = props => {
       Toast(newPlayer + " joined the room", 3000);
     });
 
+    socket.on('player list', curPlayers => {
+      setPlayers(curPlayers);
+    })
+
     socket.on('user left', (leftPlayer) => {
     });
 
@@ -49,6 +53,9 @@ const Room = props => {
       setRoundResults(data);
       Toast(data.winnerName + " won the round", 5000);
       setInQueue(false);
+      if (data.gameOver) {
+        setGameInProgress(false);
+      }
     });
 
     return function () {
@@ -60,6 +67,7 @@ const Room = props => {
       socket.off('new round');
       socket.off('everyone played');
       socket.off('round results');
+      socket.off('player list');
     }
   }, [])
 
@@ -95,10 +103,17 @@ const Room = props => {
     </>
   );
 
+  const gameover = roundResults && roundResults.gameOver ? (
+    <>
+      <h2>{roundResults.winnerName} won the game</h2>
+      <p>Play again?</p>
+    </>
+  ) : null;
   return (
     <>
       <Username socket={socket} room={props.room} submit={submitUsername} />
       <p>Room: {props.room}</p>
+      {roundResults && roundResults.gameOver ? gameover : null}
       {inQueue ? 'You will be added to the game at the start of the next round' : null}
       {gameInProgress ? gameplay : lobby}
     </>
