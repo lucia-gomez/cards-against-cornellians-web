@@ -1,6 +1,7 @@
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from flask import Flask, jsonify, request
 
+import os
 import random
 import string
 
@@ -56,8 +57,9 @@ def handle_create_room():
         room_name = ''.join(random.choices(
             string.ascii_uppercase + string.digits, k=6))
 
-    rooms[room_name] = State(loader.loadWhiteCards(DEFAULT_WHITE_CARDS),
-                             loader.loadBlackCards(DEFAULT_BLACK_CARDS))
+    path = os.getcwd()+"/server/game/"
+    rooms[room_name] = State(loader.loadWhiteCards(path+DEFAULT_WHITE_CARDS),
+                             loader.loadBlackCards(path+DEFAULT_BLACK_CARDS))
     # send to everyone
     socketio.emit('new room', list(rooms.keys()), skip_sid=request.sid)
     return room_name
@@ -205,4 +207,8 @@ def choose_winner(room_name, index):
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(
+        app,
+        port=int(os.getenv('PORT', 5000)),
+        host=os.getenv('IP', '0.0.0.0'),
+    )

@@ -3,9 +3,9 @@ MAX_PLAYERS = 20
 # min number of players allowed in a game
 MIN_PLAYERS = 2
 # default white card pack
-DEFAULT_WHITE_CARDS = './game/white_cards.csv'
+DEFAULT_WHITE_CARDS = 'white_cards.csv'
 # default black card pack
-DEFAULT_BLACK_CARDS = './game/black_cards.csv'
+DEFAULT_BLACK_CARDS = 'black_cards.csv'
 
 ### GAME RULES ###
 
