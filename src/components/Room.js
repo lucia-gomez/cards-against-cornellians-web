@@ -32,6 +32,7 @@ const Room = props => {
     })
 
     socket.on('user left', (leftPlayer) => {
+      Toast(leftPlayer + " has left the room", 3000);
     });
 
     socket.on('room closed', () => navigate('/'));
@@ -109,6 +110,7 @@ const Room = props => {
       <p>Play again?</p>
     </>
   ) : null;
+
   return (
     <>
       <Username socket={socket} room={props.room} submit={submitUsername} />

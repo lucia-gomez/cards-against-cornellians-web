@@ -12,6 +12,10 @@ const ResultsSection = styled.div`
   padding: 20px;
 `;
 
+const JudgeText = styled.h2`
+  margin: auto;
+`;
+
 const Gameplay = props => {
   const [cards, setCards] = useState([]);
   const [selected, setSelected] = useState([]);
@@ -36,6 +40,8 @@ const Gameplay = props => {
     return null;
   }
 
+  const numBlanks = d.blackCard.numBlanks;
+
   const submitCards = () => {
     socket.emit('submit cards', props.room, selected, wildcards, newCards => {
       setHasPlayed(true);
@@ -46,18 +52,32 @@ const Gameplay = props => {
   }
 
   const chooseWinner = () => {
-    socket.emit('choose winner', props.room, judgeSelected, () => {
-      setTimeout(() => {
-        socket.emit('play round', props.room);
-      }, 5000);
+    socket.emit('choose winner', props.room, judgeSelected, gameOver => {
+      if (!gameOver) {
+        setTimeout(() => {
+          socket.emit('play round', props.room);
+        }, 5000);
+      }
     });
   }
+
+  const selectWinnerBtn = d.isJudge && props.submissions !== null && props.roundResults === null ?
+    <Button disabled={judgeSelected === null} onClick={chooseWinner}>Select winner</Button> :
+    null;
+
+  const submitBtn = d.isJudge || hasPlayed ?
+    null :
+    <Button disabled={selected.length !== numBlanks} onClick={submitCards}>Submit cards</Button>
+
+  const judgeTxt = props.submissions === null ?
+    <JudgeText>{d.isJudge ? "You are" : d.judgeName + " is"} the judge</JudgeText> :
+    null;
 
   return (
     <>
       <ResultsSection>
         <BlackCard>{d.blackCard.text}</BlackCard>
-        {props.submissions === null ? <h2>{d.isJudge ? "You are" : d.judgeName + " is"} the judge</h2> : null}
+        {judgeTxt}
         {props.submissions !== null ?
           <Results
             submissions={props.submissions}
@@ -66,15 +86,11 @@ const Gameplay = props => {
           />
           : null}
       </ResultsSection>
-      {d.isJudge && props.submissions !== null && props.roundResults === null ?
-        <Button onClick={chooseWinner}>Select Winner</Button> :
-        null}
-      {d.isJudge || hasPlayed ? null : <Button onClick={submitCards}>Submit Cards</Button>}
+      {selectWinnerBtn}
+      {submitBtn}
       <Hand
-        cards={cards}
-        numBlanks={d.blackCard.numBlanks}
         isJudge={d.isJudge || hasPlayed}
-        {...{ selected, setSelected, wildcards, setWildcards }}
+        {...{ selected, setSelected, wildcards, setWildcards, numBlanks, cards }}
       />
     </>
   );
