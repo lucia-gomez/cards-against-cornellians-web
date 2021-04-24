@@ -11,10 +11,15 @@ from game.constants import *
 import game.loader as loader
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../build', static_url_path='/')
 socketio = SocketIO(app)
 
 rooms = {}
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 
 def get_game(room_name, sid):
