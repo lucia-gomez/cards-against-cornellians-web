@@ -1,51 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from '@reach/router';
 import styled from 'styled-components';
+import { Link } from '@reach/router';
+import { Button } from '../styles/Button';
 
-const Room = styled(Link)`
-  background-color: #ccc;
-  border: 1px black solid;
-  padding: 5px;
-  margin: 5px;
-  width: 200px;
+const HomePage = styled.div`
+  height: 100vh;
+  width: 100vw;
+  max-height: 100vh;
+  padding: 30px;
+  background-color: ${props => props.theme.bg};
+  color: ${props => props.theme.text};
+  text-align: left;
+  overflow: hidden;
+  position: relative;
 `;
 
-const Home = props => {
-  const socket = props.socket;
+const FloatContent = styled.div`
+  position: relative;
+  z-index: 2;
+`;
 
-  const [rooms, setRooms] = useState([]);
+const TitleSection = styled.div`
+  margin-bottom: 30px;
+`;
 
-  useEffect(() => {
-    socket.on('connect', function () {
-      socket.emit('connection', setRooms);
-    });
-    socket.on("new room", r => {
-      setRooms(r)
-    });
-    return function () {
-      socket.off('new room');
-    }
-  }, []);
+const Title = styled.h1`
+  font-size: 10vw;
+  font-weight: 900;
+  margin: 0px;
+  width: fit-content;
 
-  const handleCreateRoom = () => {
-    socket.emit('create room', props.setRoom);
+  @media only screen and (max-width: 576px) {
+    font-size: 15vw;
   }
+`;
 
+const Home = () => {
   return (
-    <div>
-      <p>Cards Against Cornellians</p>
-      <Room to="/play"
-        onClick={() => {
-          handleCreateRoom();
-        }}>Create Room</Room>
-      <ul>
-        {rooms.map((room, i) =>
-          <Room onClick={() => {
-            props.setRoom(room);
-          }} to="/play" key={i}>{room}</Room>
-        )}
-      </ul>
-    </div>
+    <HomePage>
+      <FloatContent>
+        <TitleSection>
+          <Title>Cards</Title>
+          <Title>Against</Title>
+          <Title>Cornellians</Title>
+        </TitleSection>
+        <Link to="/rooms">
+          <Button>Get started</Button>
+        </Link>
+      </FloatContent>
+    </HomePage>
   );
 }
 

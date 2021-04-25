@@ -5,5 +5,7 @@
 body {
   background-color: #eee;
   display: flex;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
   justify-content: center;
 }
