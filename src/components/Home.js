@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { Link } from '@reach/router';
 import { Button } from '../styles/Button';
+import ScrollingCards from './ScrollingCards';
 
 const HomePage = styled.div`
   height: 100vh;
   width: 100vw;
   max-height: 100vh;
-  padding: 30px;
   background-color: ${props => props.theme.bg};
   color: ${props => props.theme.text};
   text-align: left;
@@ -15,6 +15,7 @@ const HomePage = styled.div`
 `;
 
 const FloatContent = styled.div`
+  padding: 30px;
   position: relative;
   z-index: 2;
 `;
@@ -32,11 +33,16 @@ const Title = styled.h1`
   @media only screen and (max-width: 576px) {
     font-size: 15vw;
   }
+
+  @media only screen and (min-width: 1800px) {
+    font-size: 200px;
+  }
 `;
 
 const Home = () => {
   return (
     <HomePage>
+      <ScrollingCards />
       <FloatContent>
         <TitleSection>
           <Title>Cards</Title>
