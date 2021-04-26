@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
+import styled from 'styled-components';
 import Username from './Username';
-import { Button } from 'react-materialize';
+import Page from '../styles/Page';
+import { Button } from '../styles/Button';
 import Toast from './Toast';
 import Gameplay from './Gameplay';
+
+const Container = styled(Page)`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+`;
 
 const Room = props => {
   const socket = props.socket;

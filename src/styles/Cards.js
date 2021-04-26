@@ -22,9 +22,9 @@ const Card = styled.div.attrs(_ => ({
 
 const WhiteCard = styled(Card)`
   background-color: white;
-  color: ${props => props.isWild ? '#9e0b01' : 'black'};
+  color: ${props => props.isWild ? props.theme.red : 'black'};
   transition: transform 0.1s;
-  ${props => props.selected ? 'box-shadow: 0 0 10px #9e0b01' : ''};
+  ${props => props.selected ? 'box-shadow: 0 0 10px ' + props.theme.red : ''};
 
   :hover {
     ${props => props.disabled ? '' : 'transform: scale(1.05);'}
@@ -34,6 +34,7 @@ const WhiteCard = styled(Card)`
 const BlackCard = styled(Card)`
   background-color: black;
   color: white;
+  display: block;
 `;
 
 const CardGroup = styled.div.attrs(_ => ({
@@ -42,7 +43,6 @@ const CardGroup = styled.div.attrs(_ => ({
   display: inline-block;
   margin: 0px 10px;
   border-radius: 10px;
-  /* ${props => props.selected ? 'box-shadow: 0 0 10px #9e0b01' : ''}; */
 
   :hover {
     ${props => props.disabled ? '' : 'transform: scale(1.05);'}

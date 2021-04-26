@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { Button } from 'react-materialize';
+import { Button } from '../styles/Button';
 import { BlackCard } from '../styles/Cards';
 import Hand from "./Hand";
 import Results from './Results';

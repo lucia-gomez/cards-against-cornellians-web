@@ -19,6 +19,7 @@ function App() {
     medium: "#eee",
     text: "#1a1a1a",
     red: "#b71c1c",
+    lightRed: "#ef9a9a",
   };
 
   document.documentElement.style.setProperty('--bg', theme.bg);

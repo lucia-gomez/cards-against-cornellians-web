@@ -2,16 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from '@reach/router';
 import styled from 'styled-components';
 import Nav from './Nav';
+import Page from '../styles/Page';
 import { Button } from '../styles/Button';
 import { CardPanel } from 'react-materialize';
 
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
+const Container = styled(Page)`
   display: grid;
   grid-template-rows: 100px 1fr;
-  background-color: ${props => props.theme.bg};
-  color: ${props => props.theme.text};
 `;
 
 const TopRow = styled.div`
