@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '@reach/router';
 import styled from 'styled-components';
+import Nav from './Nav';
+import { Button } from '../styles/Button';
+import { CardPanel } from 'react-materialize';
 
-const Room = styled(Link)`
-  background-color: #ccc;
-  border: 1px black solid;
-  padding: 5px;
-  margin: 5px;
-  width: 200px;
+const Container = styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: 100px 1fr;
+  background-color: ${props => props.theme.bg};
+  color: ${props => props.theme.text};
+`;
+
+const TopRow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RoomItem = styled(CardPanel)`
+  background-color: ${props => props.theme.medium};
+  color: ${props => props.theme.text};
+  display: inline-block;
+  margin: 10px;
+  width: 150px;
 `;
 
 const ChooseRoom = props => {
@@ -31,21 +49,37 @@ const ChooseRoom = props => {
     socket.emit('create room', props.setRoom);
   }
 
+  const createBtn = (
+    <Link to="/play">
+      <Button onClick={() => {
+        handleCreateRoom();
+      }}>
+        Create Room
+      </Button>
+    </Link>
+  );
+
   return (
-    <div>
-      <p>Cards Against Cornellians</p>
-      <Room to="/play"
-        onClick={() => {
-          handleCreateRoom();
-        }}>Create Room</Room>
-      <ul>
-        {rooms.map((room, i) =>
-          <Room onClick={() => {
-            props.setRoom(room);
-          }} to="/play" key={i}>{room}</Room>
-        )}
-      </ul>
-    </div>
+    <>
+      <Nav />
+      <Container>
+        <TopRow>
+          {createBtn}
+        </TopRow>
+        <div>
+          <h5>Join a room</h5>
+          {rooms.length > 0 ? rooms.map((room, i) =>
+            <Link key={i} to="/play">
+              <RoomItem onClick={() => {
+                props.setRoom(room);
+              }}>
+                {room}
+              </RoomItem>
+            </Link>
+          ) : "No rooms found"}
+        </div>
+      </Container>
+    </>
   );
 }
 

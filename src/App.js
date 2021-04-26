@@ -16,6 +16,7 @@ function App() {
 
   const theme = {
     bg: "#ddd",
+    medium: "#eee",
     text: "#1a1a1a",
     red: "#b71c1c",
   };
