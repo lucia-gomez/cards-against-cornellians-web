@@ -7,8 +7,8 @@ const HomePage = styled.div`
   height: 100vh;
   width: 100vw;
   max-height: 100vh;
-  background-color: ${props => props.theme.bg};
-  color: ${props => props.theme.text};
+  background-color: ${props => props.theme.text};
+  color: ${props => props.theme.bg};
   text-align: left;
   overflow: hidden;
   position: relative;
@@ -50,7 +50,7 @@ const Home = () => {
           <Title>Cornellians</Title>
         </TitleSection>
         <Link to="/rooms">
-          <Button>Get started</Button>
+          <Button large>Get started</Button>
         </Link>
       </FloatContent>
     </HomePage>
