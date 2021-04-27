@@ -101,7 +101,7 @@ BLACK_CARDS, NUM_BLANKS
 "I told my professor I needed an extension because of __, but really it's because of __",2
 "I went to Cornell Health for __ and they gave me __",2
 "__ is the Harvard of __ ",2
-"My internship was a complete joke, they had me work on __",2
+"My internship was a complete joke, they had me work on __",1
 "I wrote a paper on __ for my FWS on __ ",2
 "I fulfilled my PE requirement with __ and __",2
 "Human Ecology is offering a new interdisciplinary major focusing on the unlikely connection between __ and __ ",2
@@ -141,7 +141,7 @@ BLACK_CARDS, NUM_BLANKS
 "When they saw __, Ezra Cornell and A.D. White stood up and shook hands",1
 "The Daily Sun had hot take on __",1
 "__ is Martha's newest reason for shutting down Greek life",1
-"What are you summer plans?",1
+"What are your summer plans?",1
 "What can I do with MATLAB?",1
 "What do your parents do?",1
 "Blue light phones are perfect for __",1
