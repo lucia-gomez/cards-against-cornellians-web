@@ -30,6 +30,10 @@ const scaleCard = css`
   width: ${props => props.scale * CARD_WIDTH}px;
   min-width: ${props => props.scale * CARD_WIDTH}px;
   padding: 10px;
+
+  :hover {
+    transform: unset;
+  }
 `;
 
 const ScrollWhiteCard = styled(WhiteCard)`
