@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+const CARD_MARGIN = 5;
 const CARD_HEIGHT = 225;
 const CARD_WIDTH = 175;
 
@@ -13,7 +14,7 @@ const Card = styled.div.attrs(_ => ({
   min-width: 175px;
   border-radius: 10px;
   padding: 10px;
-  margin: 5px;
+  margin: ${CARD_MARGIN}px;
   overflow: hidden;
   overflow-wrap: break-word;
   text-align: left;
@@ -55,4 +56,4 @@ const CardGroup = styled.div.attrs(_ => ({
   }
 `;
 
-export { WhiteCard, BlackCard, CardGroup, CARD_HEIGHT, CARD_WIDTH };
+export { WhiteCard, BlackCard, CardGroup, CARD_HEIGHT, CARD_WIDTH, CARD_MARGIN };

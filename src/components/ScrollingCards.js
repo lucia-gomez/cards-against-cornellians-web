@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { WhiteCard, CARD_HEIGHT, CARD_WIDTH } from '../styles/Cards';
+import { WhiteCard, CARD_HEIGHT, CARD_WIDTH, CARD_MARGIN } from '../styles/Cards';
 
 const Container = styled.div`
   opacity: 0.1;
@@ -87,7 +87,7 @@ const texts3 = [
 const texts = [texts1, texts2, texts3];
 
 const getRow = texts => texts.map((text, i) => {
-  const scale = (window.innerHeight / 3) / CARD_HEIGHT;
+  const scale = (window.innerHeight / 3) / (CARD_HEIGHT + 2 * CARD_MARGIN);
   if (text === null) {
     return <GapCard key={i} scale={scale} />
   }
