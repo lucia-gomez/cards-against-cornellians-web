@@ -9,18 +9,29 @@ import PageWrapper from './PageWrapper';
 
 const Container = styled(PageColor)`
   display: grid;
-  grid-template-rows: 100px 1fr;
+  grid-template-rows: 200px 1fr;
+  padding-top: 75px;
 `;
 
-const TopRow = styled.div`
+const TopRow = styled.div.attrs(_ => ({
+  className: "container"
+}))`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${props => props.theme.medium}60;
+`;
+
+const BottomRow = styled.div.attrs(_ => ({
+  className: "container"
+}))`
+  background-color: ${props => props.theme.medium}60;
+  margin: 20px auto;
 `;
 
 const RoomItem = styled(CardPanel)`
-  background-color: ${props => props.theme.medium};
-  color: ${props => props.theme.text};
+  background-color: ${props => props.theme.text};
+  color: ${props => props.theme.bg};
   display: inline-block;
   margin: 10px;
   width: 150px;
@@ -64,7 +75,7 @@ const ChooseRoom = props => {
         <TopRow>
           {createBtn}
         </TopRow>
-        <div>
+        <BottomRow>
           <h5>Join a room</h5>
           {rooms.length > 0 ? rooms.map((room, i) =>
             <Link key={i} to="/play">
@@ -75,7 +86,7 @@ const ChooseRoom = props => {
               </RoomItem>
             </Link>
           ) : "No rooms found"}
-        </div>
+        </BottomRow>
       </Container>
     </PageWrapper>
   );
