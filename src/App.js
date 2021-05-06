@@ -32,9 +32,9 @@ function App() {
 
   const location = useLocation();
   const transitions = useTransition(location, {
-    from: { opacity: 0, transform: "translate(0%, 0%)" },
+    from: { opacity: 0, transform: "translate(100%, 0%)" },
     enter: { opacity: 1, transform: "translate(0%, 0%)" },
-    leave: { opacity: 0, transform: "translate(0%, 0%)" }
+    leave: { opacity: 0, transform: "translate(-50%, 0%)" }
   });
 
   return (
