@@ -1,17 +1,15 @@
 import styled from 'styled-components';
-import { Link } from '@reach/router';
+import { Link } from "react-router-dom";
 import { Button } from '../styles/Button';
 import ScrollingCards from './ScrollingCards';
+import { Page } from '../styles/Page';
+import PageWrapper from './PageWrapper';
 
-const HomePage = styled.div`
-  height: 100vh;
-  width: 100vw;
-  max-height: 100vh;
-  background-color: ${props => props.theme.text};
-  color: ${props => props.theme.bg};
+const HomePage = styled(Page)`
   text-align: left;
   overflow: hidden;
   position: relative;
+  background-color: ${props => props.theme.bg};
 `;
 
 const FloatContent = styled.div`
@@ -41,19 +39,21 @@ const Title = styled.h1`
 
 const Home = () => {
   return (
-    <HomePage>
-      <ScrollingCards />
-      <FloatContent>
-        <TitleSection>
-          <Title>Cards</Title>
-          <Title>Against</Title>
-          <Title>Cornellians</Title>
-        </TitleSection>
-        <Link to="/rooms">
-          <Button large>Get started</Button>
-        </Link>
-      </FloatContent>
-    </HomePage>
+    <PageWrapper>
+      <HomePage>
+        <ScrollingCards />
+        <FloatContent>
+          <TitleSection>
+            <Title>Cards</Title>
+            <Title>Against</Title>
+            <Title>Cornellians</Title>
+          </TitleSection>
+          <Link to="/rooms">
+            <Button large>Get started</Button>
+          </Link>
+        </FloatContent>
+      </HomePage>
+    </PageWrapper>
   );
 }
 

@@ -4,7 +4,12 @@ import { ThemeProvider } from 'styled-components';
 
 import { useState } from 'react';
 import { io } from 'socket.io-client';
-import { Router } from '@reach/router';
+import {
+  Switch,
+  Route,
+  useLocation
+} from "react-router-dom";
+import { useTransition, animated } from 'react-spring';
 import ChooseRoom from './components/ChooseRoom';
 import Room from './components/Room';
 import Home from './components/Home';
@@ -15,9 +20,9 @@ function App() {
   const [room, setRoom] = useState(sessionStorage.getItem('cac-room-name'));
 
   const theme = {
-    bg: "#ddd",
-    medium: "#eee",
-    text: "#1a1a1a",
+    text: "#ddd",
+    medium: "#232323",
+    bg: "#1a1a1a",
     red: "#b71c1c",
     lightRed: "#ef9a9a",
   };
@@ -25,14 +30,31 @@ function App() {
   document.documentElement.style.setProperty('--bg', theme.bg);
   document.documentElement.style.setProperty('--text', theme.text);
 
+  const location = useLocation();
+  const transitions = useTransition(location, {
+    from: { opacity: 0, transform: "translate(0%, 0%)" },
+    enter: { opacity: 1, transform: "translate(0%, 0%)" },
+    leave: { opacity: 0, transform: "translate(0%, 0%)" }
+  });
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Router>
-          <Home path="/" />
-          <ChooseRoom path="/rooms" socket={socket} setRoom={setRoom} />
-          <Room path="/play" socket={socket} room={room} />
-        </Router>
+        {transitions((props, item, key) =>
+          <animated.div key={key} style={props}>
+            <Switch location={item}>
+              <Route path="/rooms" >
+                <ChooseRoom socket={socket} setRoom={setRoom} />
+              </Route>
+              <Route path="/play" >
+                <Room socket={socket} room={room} />
+              </Route>
+              <Route exact path="/" >
+                <Home />
+              </Route>
+            </Switch>
+          </animated.div>
+        )}
       </ThemeProvider>
     </div>
   );

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from '@reach/router';
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import Nav from './Nav';
-import Page from '../styles/Page';
+import { PageColor } from '../styles/Page';
 import { Button } from '../styles/Button';
 import { CardPanel } from 'react-materialize';
+import PageWrapper from './PageWrapper';
 
-const Container = styled(Page)`
+const Container = styled(PageColor)`
   display: grid;
   grid-template-rows: 100px 1fr;
 `;
@@ -57,7 +58,7 @@ const ChooseRoom = props => {
   );
 
   return (
-    <>
+    <PageWrapper>
       <Nav />
       <Container>
         <TopRow>
@@ -76,7 +77,7 @@ const ChooseRoom = props => {
           ) : "No rooms found"}
         </div>
       </Container>
-    </>
+    </PageWrapper>
   );
 }
 

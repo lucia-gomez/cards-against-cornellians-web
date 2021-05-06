@@ -8,8 +8,9 @@ const Container = styled.div`
   z-index: 2;
 `;
 
-const LogoText = styled.h5`
+const LogoText = styled.h6`
   margin: 0px;
+  color: ${props => props.theme.text};
   font-weight: 900;
 `;
 
