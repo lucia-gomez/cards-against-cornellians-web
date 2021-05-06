@@ -44,6 +44,7 @@ const ScrollWhiteCard = styled(WhiteCard)`
 const GapCard = styled(WhiteCard)`
   ${scaleCard}
   background-color: unset;
+  box-shadow: none;
 `;
 
 const texts1 = [
