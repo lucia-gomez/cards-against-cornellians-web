@@ -4,16 +4,20 @@ import { Button } from '../styles/Button';
 import { BlackCard } from '../styles/Cards';
 import Hand from "./Hand";
 import Results from './Results';
+import { CardPanel } from 'react-materialize';
 
-const ResultsSection = styled.div`
+const TopSection = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: left;
   padding: 20px;
 `;
 
-const JudgeText = styled.h2`
+const JudgeText = styled(CardPanel)`
+  background-color: ${props => props.theme.lightRed};
+  color: ${props => props.theme.text};
   margin: auto;
+  padding: 5px;
 `;
 
 const Gameplay = props => {
@@ -69,25 +73,25 @@ const Gameplay = props => {
     null :
     <Button disabled={selected.length !== numBlanks} onClick={submitCards}>Submit cards</Button>
 
-  const judgeTxt = props.submissions === null ?
-    <JudgeText>{d.isJudge ? "You are" : d.judgeName + " is"} the judge</JudgeText> :
-    null;
+  const judgeTxt = <JudgeText>{d.isJudge ? "You are" : d.judgeName + " is"} the judge</JudgeText>;
 
   return (
     <>
-      <ResultsSection>
-        <BlackCard>{d.blackCard.text}</BlackCard>
-        {judgeTxt}
-        {props.submissions !== null ?
+      <TopSection>
+        <div>
+          {judgeTxt}
+          <BlackCard>{d.blackCard.text}</BlackCard>
+          {selectWinnerBtn}
+          {submitBtn}
+        </div>
+        {props.submissions.length > 0 ?
           <Results
             submissions={props.submissions}
             isJudge={d.isJudge}
             {...{ judgeSelected, setJudgeSelected }}
           />
           : null}
-      </ResultsSection>
-      {selectWinnerBtn}
-      {submitBtn}
+      </TopSection>
       <Hand
         isJudge={d.isJudge || hasPlayed}
         {...{ selected, setSelected, wildcards, setWildcards, numBlanks, cards }}

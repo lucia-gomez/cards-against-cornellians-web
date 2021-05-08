@@ -184,6 +184,8 @@ def submit_cards(room_name, cards, wildcardTexts):
 
     if game.is_submissions_done():
         emit("everyone played", game.get_submissions(), to=room_name)
+    else:
+        emit("someone played", len(cards), to=room_name)
 
     game.draw_cards(player)
     return player.hand_to_json()

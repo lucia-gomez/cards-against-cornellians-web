@@ -1,6 +1,6 @@
 html {
   background-color: var(--bg);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .App {

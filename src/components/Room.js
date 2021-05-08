@@ -20,7 +20,7 @@ const Room = props => {
   const [gameInProgress, setGameInProgress] = useState(false);
   const [inQueue, setInQueue] = useState(false);
   const [roundData, setRoundData] = useState();
-  const [submissions, setSubmissions] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
   const [roundResults, setRoundResults] = useState();
 
   useEffect(() => {
@@ -49,12 +49,21 @@ const Room = props => {
     socket.on('new round', data => {
       setInQueue(false);
       setRoundData(data);
-      setSubmissions(null);
+      setSubmissions([]);
       setRoundResults(null);
     });
 
     socket.on('everyone played', results => {
       setSubmissions(results);
+    });
+
+    socket.on('someone played', numBlanks => {
+      console.log("someone played");
+      let dummy = [];
+      for (let i = 0; i < numBlanks; i++) {
+        dummy.push("");
+      }
+      setSubmissions(prev => [...prev, dummy]);
     });
 
     socket.on('round results', data => {
@@ -74,6 +83,7 @@ const Room = props => {
       socket.off('disconnect');
       socket.off('new round');
       socket.off('everyone played');
+      socket.off('someone played');
       socket.off('round results');
       socket.off('player list');
     }

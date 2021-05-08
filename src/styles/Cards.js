@@ -26,6 +26,7 @@ const WhiteCard = styled(Card)`
   color: ${props => props.isWild ? props.theme.red : 'black'};
   transition: transform 0.1s;
   ${props => props.selected ? 'box-shadow: 0 0 10px ' + props.theme.red : ''};
+  ${props => props.disabled ? 'opacity: 0.4;' : ''}
 
   :hover {
     ${props => props.disabled ? '' : 'transform: scale(1.05);'}

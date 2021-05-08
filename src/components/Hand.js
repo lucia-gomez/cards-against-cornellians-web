@@ -4,10 +4,11 @@ import { WhiteCard } from '../styles/Cards';
 import Wildcard from './Wildcard';
 
 const CardHand = styled.div`
+  background-color: ${props => props.theme.medium};
   display: flex;
   flex-wrap: wrap;
   padding: 20px;
-  ${props => props.isJudge ? 'opacity: 0.4;' : ''}
+  margin: 20px;
 `;
 
 const Hand = props => {
