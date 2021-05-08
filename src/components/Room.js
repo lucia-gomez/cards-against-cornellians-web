@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import styled from 'styled-components';
 import Username from './Username';
-import Page from '../styles/Page';
 import PageWrapper from './PageWrapper';
 import { Button } from '../styles/Button';
 import Toast from './Toast';
 import Gameplay from './Gameplay';
 
-const Container = styled(Page)`
+const Container = styled(PageWrapper)`
   display: grid;
   grid-template-columns: 2fr 1fr;
 `;

@@ -21,7 +21,7 @@ function App() {
 
   const theme = {
     text: "#1a1a1a",
-    medium: "#eeeeee",
+    medium: "#d8d8d8",
     bg: "#dddddd",
     red: "#b71c1c",
     lightRed: "#ef9a9a",

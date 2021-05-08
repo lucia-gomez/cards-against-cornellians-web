@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import Nav from './Nav';
-import Page from '../styles/Page';
 import { Button } from '../styles/Button';
 import { CardPanel } from 'react-materialize';
 import PageWrapper from './PageWrapper';
 
-const Container = styled(Page)`
+const Container = styled(PageWrapper)`
   display: grid;
   grid-template-rows: 200px 1fr;
   padding-top: 75px;
@@ -19,13 +18,13 @@ const TopRow = styled.div.attrs(_ => ({
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${props => props.theme.medium}60;
+  background-color: ${props => props.theme.medium};
 `;
 
 const BottomRow = styled.div.attrs(_ => ({
   className: "container"
 }))`
-  background-color: ${props => props.theme.medium}60;
+  background-color: ${props => props.theme.medium};
   margin: 20px auto;
 `;
 
@@ -85,31 +84,29 @@ const ChooseRoom = props => {
   );
 
   return (
-    <PageWrapper>
+    <Container>
       <Nav />
-      <Container>
-        <TopRow>
-          {createBtn}
-        </TopRow>
-        <BottomRow>
-          <h5>Join a room</h5>
-          <Grid>
-            {rooms.length > 0 ? rooms.map(({ code, numPlayers, inProgress }) =>
-              <Link key={code} to="/play">
-                <RoomItem onClick={() => {
-                  props.setRoom(code);
-                }}>
-                  {code}
-                  <PlayerCount>
-                    {numPlayers}/10
+      <TopRow>
+        {createBtn}
+      </TopRow>
+      <BottomRow>
+        <h5>Join a room</h5>
+        <Grid>
+          {rooms.length > 0 ? rooms.map(({ code, numPlayers, inProgress }) =>
+            <Link key={code} to="/play">
+              <RoomItem onClick={() => {
+                props.setRoom(code);
+              }}>
+                {code}
+                <PlayerCount>
+                  {numPlayers}/10
                 </PlayerCount>
-                </RoomItem>
-              </Link>
-            ) : "No rooms found"}
-          </Grid>
-        </BottomRow>
-      </Container>
-    </PageWrapper>
+              </RoomItem>
+            </Link>
+          ) : "No rooms found"}
+        </Grid>
+      </BottomRow>
+    </Container>
   );
 }
 
