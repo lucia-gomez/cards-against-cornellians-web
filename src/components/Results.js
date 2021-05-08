@@ -14,7 +14,6 @@ const Results = props => {
 
   return (
     <div>
-      <p>Results</p>
       {props.submissions.map((group, i) => {
         if (group.length === 1) {
           return <WhiteCard
