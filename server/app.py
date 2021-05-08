@@ -39,7 +39,7 @@ def get_game(room_name, sid):
 '''
 
 
-@socketio.on('connection')
+@socketio.on('get rooms')
 def getRoomList():
     ret = []
     for code, room in rooms.items():

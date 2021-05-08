@@ -26,12 +26,26 @@ const BottomRow = styled.div.attrs(_ => ({
 }))`
   background-color: ${props => props.theme.medium};
   margin: 20px auto;
+  position: relative;
 `;
 
 const Grid = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+`;
+
+const Refresh = styled.a.attrs(({ className: 'btn-flat waves-effect' }))`
+  position: absolute;
+  right: 5px; 
+  top: 0;
+  padding: 0px;
+  margin: 5px;
+
+  > i {
+    color: ${props => props.theme.text};
+    font-size: 30px;
+  }
 `;
 
 const RoomItem = styled(CardPanel)`
@@ -57,9 +71,9 @@ const ChooseRoom = props => {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    socket.emit('connection', setRooms);
+    handleRefresh();
     socket.on('connect', function () {
-      socket.emit('connection', setRooms);
+      handleRefresh();
     });
     socket.on("new room", r => {
       setRooms(r)
@@ -71,6 +85,10 @@ const ChooseRoom = props => {
 
   const handleCreateRoom = () => {
     socket.emit('create room', props.setRoom);
+  }
+
+  const handleRefresh = () => {
+    socket.emit('get rooms', setRooms);
   }
 
   const createBtn = (
@@ -91,6 +109,9 @@ const ChooseRoom = props => {
       </TopRow>
       <BottomRow>
         <h5>Join a room</h5>
+        <Refresh onClick={handleRefresh}>
+          <i className="material-icons">autorenew</i>
+        </Refresh>
         <Grid>
           {rooms.length > 0 ? rooms.map(({ code, numPlayers, inProgress }) =>
             <Link key={code} to="/play">
