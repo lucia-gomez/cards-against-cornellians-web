@@ -43,6 +43,7 @@ const ChooseRoom = props => {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
+    socket.emit('connection', setRooms);
     socket.on('connect', function () {
       socket.emit('connection', setRooms);
     });
