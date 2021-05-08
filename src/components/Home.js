@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { Button } from '../styles/Button';
 import ScrollingCards from './ScrollingCards';
-import { Page } from '../styles/Page';
+import Page from '../styles/Page';
 import PageWrapper from './PageWrapper';
 
 const HomePage = styled(Page)`
   text-align: left;
   overflow: hidden;
   position: relative;
-  background-color: ${props => props.theme.bg};
+  background-color: ${props => props.theme.text};
 `;
 
 const FloatContent = styled.div`
@@ -23,6 +23,7 @@ const TitleSection = styled.div`
 `;
 
 const Title = styled.h1`
+  color: ${props => props.theme.bg};
   font-size: 10vw;
   font-weight: 900;
   margin: 0px;

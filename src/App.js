@@ -20,9 +20,9 @@ function App() {
   const [room, setRoom] = useState(sessionStorage.getItem('cac-room-name'));
 
   const theme = {
-    text: "#ddd",
-    medium: "#232323",
-    bg: "#1a1a1a",
+    text: "#1a1a1a",
+    medium: "#eeeeee",
+    bg: "#dddddd",
     red: "#b71c1c",
     lightRed: "#ef9a9a",
   };

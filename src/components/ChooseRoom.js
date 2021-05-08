@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import Nav from './Nav';
-import { PageColor } from '../styles/Page';
+import Page from '../styles/Page';
 import { Button } from '../styles/Button';
 import { CardPanel } from 'react-materialize';
 import PageWrapper from './PageWrapper';
 
-const Container = styled(PageColor)`
+const Container = styled(Page)`
   display: grid;
   grid-template-rows: 200px 1fr;
   padding-top: 75px;

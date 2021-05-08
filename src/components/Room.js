@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import styled from 'styled-components';
 import Username from './Username';
-import { Page } from '../styles/Page';
+import Page from '../styles/Page';
+import PageWrapper from './PageWrapper';
 import { Button } from '../styles/Button';
 import Toast from './Toast';
 import Gameplay from './Gameplay';
@@ -119,13 +120,13 @@ const Room = props => {
   ) : null;
 
   return (
-    <>
+    <PageWrapper>
       <Username socket={socket} room={props.room} submit={submitUsername} />
       <p>Room: {props.room}</p>
       {roundResults && roundResults.gameOver ? gameover : null}
       {inQueue ? 'You will be added to the game at the start of the next round' : null}
       {gameInProgress ? gameplay : lobby}
-    </>
+    </PageWrapper>
   )
 }
 
