@@ -40,8 +40,15 @@ def get_game(room_name, sid):
 
 
 @socketio.on('connection')
-def connection():
-    return list(rooms.keys())
+def getRoomList():
+    ret = []
+    for code, room in rooms.items():
+        ret.append({
+            'code': code,
+            'numPlayers': len(room.players),
+            'inProgress': room.in_progress(),
+        })
+    return ret
 
 
 @socketio.on('disconnection')
@@ -71,7 +78,7 @@ def handle_create_room():
     rooms[room_name] = State(loader.loadWhiteCards(path+DEFAULT_WHITE_CARDS),
                              loader.loadBlackCards(path+DEFAULT_BLACK_CARDS))
     # send to everyone
-    socketio.emit('new room', list(rooms.keys()), skip_sid=request.sid)
+    socketio.emit('new room', getRoomList(), skip_sid=request.sid)
     return room_name
 
 
@@ -219,6 +226,7 @@ def choose_winner(room_name, index):
 if __name__ == '__main__':
     socketio.run(
         app,
+        debug=True,
         port=int(os.environ.get('PORT', '5000')),
         host=os.getenv('IP', '0.0.0.0'),
     )

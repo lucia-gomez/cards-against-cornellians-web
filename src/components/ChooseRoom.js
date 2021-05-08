@@ -29,12 +29,27 @@ const BottomRow = styled.div.attrs(_ => ({
   margin: 20px auto;
 `;
 
+const Grid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
 const RoomItem = styled(CardPanel)`
-  background-color: ${props => props.theme.text};
-  color: ${props => props.theme.bg};
-  display: inline-block;
+  background-color: ${props => props.theme.bg};
+  color: ${props => props.theme.text};
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;  
   margin: 10px;
   width: 150px;
+  padding: 20px 5px;
+  position: relative;
+`;
+
+const PlayerCount = styled.p`
+  margin: 0px;
 `;
 
 const ChooseRoom = props => {
@@ -78,15 +93,20 @@ const ChooseRoom = props => {
         </TopRow>
         <BottomRow>
           <h5>Join a room</h5>
-          {rooms.length > 0 ? rooms.map((room, i) =>
-            <Link key={i} to="/play">
-              <RoomItem onClick={() => {
-                props.setRoom(room);
-              }}>
-                {room}
-              </RoomItem>
-            </Link>
-          ) : "No rooms found"}
+          <Grid>
+            {rooms.length > 0 ? rooms.map(({ code, numPlayers, inProgress }) =>
+              <Link key={code} to="/play">
+                <RoomItem onClick={() => {
+                  props.setRoom(code);
+                }}>
+                  {code}
+                  <PlayerCount>
+                    {numPlayers}/10
+                </PlayerCount>
+                </RoomItem>
+              </Link>
+            ) : "No rooms found"}
+          </Grid>
         </BottomRow>
       </Container>
     </PageWrapper>

@@ -1,5 +1,5 @@
 # max number of players allowed in a game
-MAX_PLAYERS = 20
+MAX_PLAYERS = 10
 # min number of players allowed in a game
 MIN_PLAYERS = 2
 # default white card pack
